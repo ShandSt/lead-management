@@ -1,8 +1,8 @@
-README - Lead Management API
-Overview
-This document describes the endpoints available in the Lead Management API, which allows clients to manage leads, client data, and lead assignment processes efficiently.
+<title>README - Lead Management API</title>
+<h1>Overview</h1>
+<p>This document describes the endpoints available in the Lead Management API, which allows clients to manage leads, client data, and lead assignment processes efficiently.</p>
 
-API Endpoints
+<h2>API Endpoints</h2>
 
 1. Create Client
    POST /clients
@@ -26,7 +26,7 @@ Response
 201 Created: Successfully created client.
 400 Bad Request: Invalid request data.
 
-2. Get All Clients
+<h2>2. Get All Clients</h2>
    GET /clients
 
 Retrieves a list of all clients.
@@ -35,6 +35,7 @@ Response
 200 OK: Successfully retrieved all clients. Returns an array of clients.
 404 Not Found: No clients found.
 Sample Response
+<code>
 [
 	{
 		"ID": "string",
@@ -48,8 +49,9 @@ Sample Response
 		"Capacity": "integer"
 	}
 ]
+</code>
 
-3. Get Client
+<h2>3. Get Client</h2>
    GET /clients/:id
 
 Retrieves details of a specific client.
@@ -60,6 +62,7 @@ Response
 200 OK: Successfully retrieved client.
 404 Not Found: Client not found.
 Sample Response
+<code>
 {
 	"ID": "string",
 	"Name": "string",
@@ -71,8 +74,9 @@ Sample Response
 	"LeadCount": "integer",
 	"Capacity": "integer"
 }
+</code>
 
-4. Assign Lead
+<h2>4. Assign Lead</h2>
    GET /clients/assignLead
 
 Assigns a lead to the specified client.
@@ -83,6 +87,7 @@ Response
 200 OK: Successfully assigned a lead.
 404 Not Found: Client not found.
 Sample Response
+<code>
 {
 	"message": "Lead assigned",
 	"client": {
@@ -97,6 +102,7 @@ Sample Response
 		"Capacity": "integer"
 	}
 }
+</code>
 
 Development and Testing
 This API is developed using Go with the Gin framework. For testing, use tools such as Postman or cURL to make requests to the local server usually running at http://localhost:8001.
@@ -104,4 +110,6 @@ This API is developed using Go with the Gin framework. For testing, use tools su
 Running Tests
 Execute the following command in the terminal to run the automated tests:
 
+<code>
 go test ./api_test
+</code>
