@@ -1,4 +1,4 @@
-<title>README - Lead Management API</title>
+<h1>README - Lead Management API</h1>
 <h1>Overview</h1>
 <p>This document describes the endpoints available in the Lead Management API, which allows clients to manage leads, client data, and lead assignment processes efficiently.</p>
 
