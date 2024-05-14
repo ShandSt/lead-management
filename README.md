@@ -8,6 +8,7 @@ API Endpoints
    POST /clients
 
 Creates a new client in the system.
+<code>
 {
 	"ID": "string",
 	"Name": "string",
@@ -19,6 +20,7 @@ Creates a new client in the system.
 	"LeadCount": "integer",
 	"Capacity": "integer"
 }
+</code>
 
 Response
 201 Created: Successfully created client.
