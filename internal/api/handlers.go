@@ -70,8 +70,8 @@ func SelectClientForLead(clients []*types.Client) *types.Client {
 
 	sort.Slice(availableClients, func(i, j int) bool {
 		if availableClients[i].Priority == availableClients[j].Priority {
-			return float64(availableClients[i].LeadCount)/float64(availableClients[i].Capacity) <
-				float64(availableClients[j].LeadCount)/float64(availableClients[j].Capacity)
+			return availableClients[i].LeadCount/availableClients[i].Capacity <
+				availableClients[j].LeadCount/availableClients[j].Capacity
 		}
 		return availableClients[i].Priority > availableClients[j].Priority
 	})
