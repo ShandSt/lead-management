@@ -17,7 +17,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// SetupRouter configures the Gin router for testing purposes.
 func SetupRouter(mockProvider interfaces.ClientProvider) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
@@ -26,12 +25,10 @@ func SetupRouter(mockProvider interfaces.ClientProvider) *gin.Engine {
 	return router
 }
 
-// MockClientProvider implements interfaces.ClientProvider with full functionalities needed for testing.
 type MockClientProvider struct {
 	clients []*types.Client
 }
 
-// AddClient adds a new client to the mock data.
 func (mcp *MockClientProvider) AddClient(c *types.Client) error {
 	if c.Name == "" {
 		return errors.New("client name cannot be empty")
@@ -41,18 +38,14 @@ func (mcp *MockClientProvider) AddClient(c *types.Client) error {
 	return nil
 }
 
-// NewClient simulates the operation of adding a new client in the database.
-// This might be redundant if you have AddClient doing the same job. Adjust as needed.
 func (mcp *MockClientProvider) NewClient(c *types.Client) error {
 	return mcp.AddClient(c)
 }
 
-// GetAllClients simulates retrieving all clients from the database.
 func (mcp *MockClientProvider) GetAllClients() []*types.Client {
 	return mcp.clients
 }
 
-// GetClient simulates retrieving a specific client by ID.
 func (mcp *MockClientProvider) GetClient(id string) (*types.Client, error) {
 	for _, client := range mcp.clients {
 		if client.ID == id {

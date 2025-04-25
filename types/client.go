@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -25,18 +26,41 @@ type CustomTime struct {
 
 func (ct *CustomTime) UnmarshalJSON(data []byte) error {
 	strInput := string(data)
-	strInput = strInput[1 : len(strInput)-1]
+	strInput = strings.Trim(strInput, "\"")
+
+	formats := []string{
+		time.RFC3339,
+		"2006-01-02T15:04:05Z",
+		"2006-01-02T15:04:05.000Z",
+		"2006-01-02T15:04:05",
+		"2006-01-02 15:04:05",
+		"15:04:05",
+	}
 
 	if strInput[len(strInput)-1] == 'Z' {
 		strInput = strInput[:len(strInput)-1] + "+00:00"
 	}
 
-	parsedTime, err := time.Parse(time.RFC3339, strInput)
-	if err != nil {
-		return fmt.Errorf("error parsing time: %w", err)
+	var err error
+	var parsedTime time.Time
+
+	for _, format := range formats {
+		parsedTime, err = time.Parse(format, strInput)
+		if err == nil {
+			break
+		}
 	}
+
+	if err != nil {
+		return fmt.Errorf("error parsing time '%s': %w", strInput, err)
+	}
+
 	ct.Time = parsedTime
 	return nil
+}
+
+func (ct CustomTime) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf("\"%s\"", ct.Time.Format(time.RFC3339))), nil
 }
 
 func (wh WorkingHours) Contains(t CustomTime) bool {

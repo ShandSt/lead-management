@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Build and test artifacts
+bin/
+tmp/
+coverage.out
+*.test
+*.out
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+data/
+*.log
+*.env 

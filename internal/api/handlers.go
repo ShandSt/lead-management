@@ -44,7 +44,7 @@ func getClientHandler(c *gin.Context, clientService *client.Service) {
 	c.JSON(http.StatusOK, gin.H{"client": client})
 }
 
-// Assign a lead to an appropriate client based on priority and availability
+// assignLeadHandler assigns a lead to an appropriate client based on priority and availability
 func assignLeadHandler(c *gin.Context, clientService *client.Service) {
 	clients := clientService.GetAllClients()
 
@@ -68,14 +68,23 @@ func SelectClientForLead(clients []*types.Client) *types.Client {
 	customNow := types.CustomTime{Time: now}
 	availableClients := filterAvailableClients(clients, customNow)
 
+	if len(availableClients) == 0 {
+		return nil
+	}
+
+	// Sort clients by priority (higher priority first)
+	// and then by load factor (leadCount/capacity)
 	sort.Slice(availableClients, func(i, j int) bool {
 		if availableClients[i].Priority == availableClients[j].Priority {
-			return availableClients[i].LeadCount/availableClients[i].Capacity <
-				availableClients[j].LeadCount/availableClients[j].Capacity
+			// Calculate load factor as float to avoid integer division issues
+			loadFactorI := float64(availableClients[i].LeadCount) / float64(availableClients[i].Capacity)
+			loadFactorJ := float64(availableClients[j].LeadCount) / float64(availableClients[j].Capacity)
+			return loadFactorI < loadFactorJ
 		}
 		return availableClients[i].Priority > availableClients[j].Priority
 	})
 
+	// Return the first client that has available capacity
 	for _, client := range availableClients {
 		if client.LeadCount < client.Capacity {
 			return client
@@ -87,10 +96,11 @@ func SelectClientForLead(clients []*types.Client) *types.Client {
 func filterAvailableClients(clients []*types.Client, now types.CustomTime) []*types.Client {
 	var available []*types.Client
 	for _, client := range clients {
-		if client.WorkingHours.Contains(now) {
+		if client.Capacity > 0 && client.WorkingHours.Contains(now) {
 			available = append(available, client)
 		} else {
-			fmt.Printf("Client %s not available at %s\n", client.Name, now.Time.Format("15:04"))
+			fmt.Printf("Client %s not available at %s (capacity: %d)\n",
+				client.Name, now.Time.Format("15:04"), client.Capacity)
 		}
 	}
 	return available
